@@ -43,7 +43,7 @@ See [DISCLAIMER.md](DISCLAIMER.md). Short version: this is free, provided as-is,
 
 ## Support this project
 
-If this tool has been useful to you, tips are welcome and appreciated (never required): **[Ko-fi link here]**
+If this tool has been useful to you, tips are welcome and appreciated (never required): **[(https://ko-fi.com/weibullnerdeng)]**
 
 ## Reporting issues / requesting features
 
