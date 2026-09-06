@@ -58,7 +58,7 @@ It stops short of full commercial reliability suites in a few areas: accelerated
 - Windows is recommended; some features (e.g. Goal Seek-based calculations) are more reliable on Windows Excel than Excel for Mac
 
 ## Getting Started
-
+See [SAMPLE-OUTPUT.md](SAMPLE-OUTPUT.md) for example screens from a real analysis run.
 1. Download the latest release from the [Releases](https://github.com/Weibull-Nerd-eng/reliability-toolkit/releases) page.
 2. Open the file in Excel. You'll see a security warning ("Protected View" or a macro warning) — **this is expected** for any macro-enabled workbook downloaded from the internet. Click **Enable Editing**, then **Enable Content** (or **Enable Macros**) to use the tool.
 3. Start from the main menu and pick your data type: individual (date/cycles), grouped, grouped interval-inspection, or plant maintenance cost forecast. If it's your first time, load one of the built-in example datasets to see how the tool works before pasting in your own data.
