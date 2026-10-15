@@ -1,28 +1,32 @@
 # Feature Summary
 
+*Applies to v3.0. See [CHANGELOG.md](CHANGELOG.md) for what changed since REV 2.0, and the [README](README.md) for an overview and download link.*
+
 ## Life Data Analysis: Weibull (2P & 3P), Exponential, Lognormal
 
-Every path below supports a standard **2-parameter Weibull** fit, a **3-parameter ("Tri") Weibull** fit with a fitted location/threshold parameter, an **Exponential** fit, and a **Lognormal** fit — all fitted from the same dataset for direct side-by-side comparison — across three major data structures:
+Every path below supports a standard **2-parameter Weibull** fit, a **3-parameter ("Tri") Weibull** fit with a fitted location/threshold parameter, an **Exponential** fit, and a **Lognormal** fit — all fitted from the same dataset for direct side-by-side comparison — across three major data structures. The Tri-model location parameter is fitted with a built-in routine, so no Excel Solver is needed.
 
 ### 1. Base — individual failure & suspension records
 
 Paste in individual failure/suspension records directly. Supports:
 
 - Rank regression and Maximum Likelihood Estimation (MLE) fitting
-- Fisher Matrix, Likelihood Ratio, and Bayesian credible confidence bounds (90% two-sided)
+- Fisher Matrix, Likelihood Ratio, and Bayesian credible confidence bounds (90% two-sided), plus parametric bootstrap intervals
+- 90% beta-binomial confidence band drawn on the Weibull regression chart
 - Bayesian MAP (maximum a posteriori) Beta estimation with a user-supplied prior (expected Beta and prior sample size), for incorporating engineering judgment or fleet history alongside the data
 - Goodness-of-fit reporting (Anderson-Darling AD*, Stephens-adjusted) and a Distribution Fit Comparison table across Weibull/Exponential/Lognormal
 - Kaplan-Meier non-parametric survival curve, plotted as an overlay for a model-free sanity check against the parametric fit
+- Weibull future-failure forecast for the units still running
 
 ### 2. Grouped — binned/grouped failure data
 
-Same fitting methods, confidence bound options, and distribution comparison as Base, adapted for data already grouped into bins/intervals rather than individual timestamps. Includes an Actuarial (Cutler-Ederer) life-table survival estimator as the non-parametric overlay, built for interval-summarized counts rather than individual event times.
+Same fitting methods, confidence bound options, and distribution comparison as Base, adapted for data already grouped into bins/intervals rather than individual timestamps. The Weibull MLE uses an interval-censored likelihood weighted by the recorded failure and suspension counts, and the confidence band uses the correct sample size and ranks for grouped data. Includes an Actuarial (Cutler-Ederer) life-table survival estimator as the non-parametric overlay, built for interval-summarized counts rather than individual event times.
 
 ### 3. Grouped Inspection — interval-censored inspection data
 
-For data from periodic inspections where failures are only known to have occurred sometime between two inspection dates, rather than at a precise time. Same fitting, bounding, and Actuarial survival overlay as Grouped, built for this larger, interval-censored data structure.
+For data from periodic inspections where failures are only known to have occurred sometime between two inspection dates, rather than at a precise time. Same fitting, bounding, and Actuarial survival overlay as Grouped, built for this larger, interval-censored data structure. Interval order and count checks run before the analysis starts.
 
-**Across all three paths:** guided data-entry wizard, rank-order/probability plotting worksheets, and a Weibull shape parameter explanation reference sheet.
+**Across all three paths:** guided data-entry wizard, rank-order/probability plotting worksheets, and bootstrap results sheets. The REV 2.0 Weibull shape explanation sheet has been removed.
 
 ---
 
@@ -32,7 +36,7 @@ Same three-major-path structure as the life-data analysis, for tracking whether 
 
 ### 1. Individual records — date-based or cycles-based
 
-Paste in individual failure records against either calendar dates or a usage/cycles count. Point estimate via the classical IEC 61164 / MIL-HDBK-189 bias-corrected estimator, plus an independent Duane log-log regression estimate. Closed-form chi-square confidence bounds (Beta, cumulative MTBF, and implied Lambda). Each has a companion sheet for the other test-termination convention (failure-terminated vs. time-terminated). A Laplace trend test (U-statistic) reports whether the data shows a statistically significant trend at all, before you draw a growth/deterioration conclusion from the point estimate.
+Paste in individual failure records against either calendar dates or a usage/cycles count. Point estimate via the classical IEC 61164 / MIL-HDBK-189 bias-corrected estimator, plus an independent Duane log-log regression estimate with its own chart. Closed-form chi-square confidence bounds (Beta, cumulative MTBF, and implied Lambda). Each has a companion sheet for the other test-termination convention (failure-terminated vs. time-terminated). A Laplace trend test (U-statistic) reports whether the data shows a statistically significant trend at all, before you draw a growth/deterioration conclusion from the point estimate.
 
 ### 2. Grouped — interval failure counts
 
@@ -42,29 +46,39 @@ For data recorded as failure counts per time interval rather than individual tim
 
 Same Goal Seek MLE and Fisher Matrix/Likelihood Ratio bounds as Grouped, sized for much larger inspection-based datasets.
 
-**Across all paths:** "What-if" forecasting — enter a future time/cycles or failure count and see the expected corresponding value, with results linked directly to the reliability growth plots.
+**Across all paths:**
+
+- **"What-if" forecasting** — enter a future time/cycles or failure count and see the expected corresponding value, with results linked directly to the reliability growth plots. A forecast you have entered is kept when you leave and return.
+- **Cumulative and instantaneous MTBF** with Fisher Matrix and Likelihood Ratio bounds.
+- **Bootstrap confidence intervals** — parametric bootstrap of the power-law process, with the right failure- or time-terminated behaviour.
+- **Multi-phase analysis** — fit a separate Beta and Lambda to each phase, with phase charts, for data whose growth rate changes over time. A change-point detector suggests a best phase boundary, and you can enter your own.
+- **Duane model** built onto the same sheets as the Crow-AMSAA fit.
 
 ---
 
-## Cost & Spares Optimizer
+## Cost & Spares Optimiser
 
-Using the Beta/Lambda fitted from the Crow-AMSAA analysis, computes the maintenance interval that minimizes cost rate and the spares stock level that satisfies a target service level (newsvendor critical-fractile rule). Available for date, cycles, grouped, and grouped interval-inspection data.
+Using the Beta/Lambda fitted from the Crow-AMSAA analysis, computes the maintenance interval that minimises cost rate and the spares stock level that satisfies a target service level (newsvendor critical-fractile rule). Available for date, cycles, grouped, and grouped interval-inspection data.
 
 ## Cost Analysis
 
 A dedicated cost comparison sheet for every one of the Weibull paths (Base, Tri, Grouped, GroupedTri, GroupedInspection, GroupedInspectionTri) — compares costs based on the fitted life distribution, to support run-to-failure vs. planned-replacement cost tradeoff decisions.
 
+- Optional replacement downtimes: the time a planned replacement takes and the time to repair after a failure, which lengthen each replacement cycle. Leave them blank for the classic age-replacement model.
+- The cost-optimal replacement age is found exactly, not only on a whole-unit age grid.
+
 ## Spares Forecasting
 
-A matching spare-parts forecasting sheet for the Weibull paths above, projecting expected spares demand based on the fitted failure distribution.
+A matching spare-parts forecasting sheet for the Weibull paths above, projecting expected spares demand based on the fitted failure distribution. You choose the confidence level used for the recommended stock level, and the result is shown on the page.
 
 ## Confidence Bounds — full picture
 
-Across Weibull, Exponential, Lognormal, and Crow-AMSAA, three independent bounding methods are available (90% two-sided):
+Across Weibull, Exponential, Lognormal, and Crow-AMSAA, independent bounding methods are available (90% two-sided):
 
 - **Fisher Matrix bounds** — the standard asymptotic approach, fast to compute directly from the likelihood.
 - **Likelihood Ratio bounds** — generally more accurate than Fisher Matrix for smaller sample sizes, computed via custom golden-section-search/bisection root-finding.
 - **Bayesian credible bounds** — incorporates a user-supplied prior belief about the shape parameter (with adjustable weighting), available across all six Weibull paths via the on-sheet Bayesian button.
+- **Parametric bootstrap intervals** — available for Bi- and Tri-Weibull on all three data paths and for Crow-AMSAA on all of its paths, with a results sheet for each and a summary on the Summary page.
 
 Crow-AMSAA's individual-record paths (date/cycles) use the classical closed-form chi-square "Crow bounds" instead of Fisher/Likelihood Ratio, consistent with standard reliability growth analysis practice.
 
@@ -81,13 +95,13 @@ A separate, plant-wide module (distinct from the per-asset Cost Analysis sheets 
 
 **Basis:** the corrective-cost structure mirrors a published case study — Comerford, Areva T&D NZ (VANZ, 2005) — which applied Crow-AMSAA to Meridian Energy's fleet of 38 dissimilar hydro units, pooled as one plant-level forced-outage trend, multiplied by an independently built cost-per-outage figure. This pooled result speaks to the plant's overall corrective burden, not to which specific asset fails next; for asset-level resolution, filter the data input by Equipment Class and run the module separately per class.
 
-**Workflow:** import or paste a CMMS export (any columns, any order) → filter out rows you don't want included → map columns (Equipment ID, Event Date, Cost; Work Order and Equipment Class optional) and classify each row as Failure/Preventive/Suspension → refresh the forecast → read the Output report. A Quick Start guide and worked example dataset are built in.
+**Workflow:** import or paste a CMMS export (any columns, any order) → filter out rows you don't want included → map columns (Equipment ID, Event Date, Cost; Work Order and Equipment Class optional) and classify each row as Failure/Preventive/Suspension → refresh the forecast → read the **Maintenance Cost Forecast** sheet (called "Output" in REV 2.0). A Quick Start guide and worked example dataset are built in. The report also includes a cost Pareto and an approximate 90% interval on the projected total.
 
 **Configurable settings:** fiscal year start month, years of history to include, fallback flat inflation rate (with per-year override), years to forecast, and whether corrective cost-per-failure uses a flat historical average or a fitted trend.
 
 **Limitations (documented on the "Annual Plant Read Me" sheet):**
 
-- This is a point forecast, not a confidence interval — treat it as an order-of-magnitude planning number with only a handful of years of annual data.
+- The forecast is a planning estimate with only an approximate uncertainty band — treat it as an order-of-magnitude planning number with only a handful of years of annual data.
 - A single Beta assumes the plant's underlying failure process is stable over the history used; a major turnaround, capital project, or equipment-mix shift will show as a kink in the fit, and should be handled by restricting years of history.
 - Preventive cost is a flat historical average by design and won't capture a materially growing or shrinking PM program.
 
@@ -97,7 +111,7 @@ A separate, plant-wide module (distinct from the per-asset Cost Analysis sheets 
 
 - **Kaplan-Meier** survival curve for individual (date/cycles) data.
 - **Actuarial (Cutler-Ederer) life-table** survival estimator for grouped and grouped interval-inspection data, correctly handling interval-summarized counts rather than individual event times.
-- Both are shown as a diagnostic overlay against the parametric fit, so the Weibull/Exponential/Lognormal curve can be sanity-checked against a model-free estimate.
+- Both are shown as a diagnostic overlay against the parametric fit, so the Weibull/Exponential/Lognormal curve can be sanity-checked against a model-free estimate, with a "Reading the chart" table of survival values at evenly spaced ages.
 
 ## Reporting
 
@@ -107,6 +121,10 @@ A separate, plant-wide module (distinct from the per-asset Cost Analysis sheets 
 ## Supporting features
 
 - Guided data-entry wizard — choose your data type (individual, grouped, grouped interval-inspection, or plant cost forecast), paste in raw maintenance data, select the relevant columns, and mark failures vs. suspensions, with validation for missing data
+- Input checks before a run: interval order and overlap checks, numeric and whole-number count checks, and a warning if the working copy of the data no longer matches the CMMS sheet
+- Data limit of row 15,000 on input sheets, with a warning instead of silently ignoring rows below it
+- Prompts before re-running an analysis or replacing a dataset that already has results, with a shortcut to the existing results
+- A Back button on the Crow-AMSAA and Weibull report forms that keeps your data and results
 - Example dataset included for every data-entry path
 - Calendar date-picker for entering dates
 - Goodness-of-fit reporting
@@ -117,5 +135,4 @@ A separate, plant-wide module (distinct from the per-asset Cost Analysis sheets 
 
 ## Relationship to commercial reliability software (brief)
 
-The life-data (Weibull/Exponential/Lognormal), non-parametric survival, and Crow-AMSAA modules above cover the same statistical ground as the single-population analysis tools in dedicated commercial reliability packages — same estimators (rank regression, MLE, IEC 61164/MIL-HDBK-189), same bounding methods (Fisher Matrix, Likelihood Ratio, plus a Bayesian option many packages charge extra for), and the same goodness-of-fit diagnostics. What isn't here, and what typically justifies a commercial platform's license cost instead: accelerated life testing and stress-life extrapolation, degradation modeling, system-level reliability block diagrams or fault trees, and formal reliability-growth-with-corrective-actions tracking. If your analysis is single-asset or single-fleet life data or growth trending, this workbook should get you to the same numbers; for accelerated testing or system-level modeling, use a dedicated platform.
-
+The life-data (Weibull/Exponential/Lognormal), non-parametric survival, and Crow-AMSAA modules above cover the same statistical ground as the single-population analysis tools in dedicated commercial reliability packages — same estimators (rank regression, MLE, IEC 61164/MIL-HDBK-189), same bounding methods (Fisher Matrix, Likelihood Ratio, plus Bayesian and bootstrap options many packages charge extra for), and the same goodness-of-fit diagnostics. What isn't here, and what typically justifies a commercial platform's license cost instead: accelerated life testing and stress-life extrapolation, degradation modeling, system-level reliability block diagrams or fault trees, and formal reliability-growth-with-corrective-actions tracking. If your analysis is single-asset or single-fleet life data or growth trending, this workbook should get you to the same numbers; for accelerated testing or system-level modeling, use a dedicated platform.
