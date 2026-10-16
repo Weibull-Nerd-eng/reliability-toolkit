@@ -6,7 +6,9 @@ Reliability and maintenance decisions carry real operational and safety conseque
 
 This workbook has not undergone the formal software verification & validation (V&V) process that commercial reliability platforms typically document. If your process requires an auditable, vendor-supported statistical engine for regulatory, contractual, or certification purposes, use one of those tools, or use this workbook only as an independent cross-check alongside one.
 
-**Plant-level annual maintenance cost forecast:** this module produces a point forecast, not a confidence interval. With only a handful of years of annual CMMS history behind it, treat its output as an order-of-magnitude planning number, not a budget commitment — see the "Annual Plant Read Me" sheet in the workbook for the assumptions and limitations behind it.
+**Bootstrap intervals and multi-phase analysis:** bootstrap confidence intervals are simulation-based and depend on the fitted model and the random seed, and their accuracy can be limited with small numbers of failures. Multi-phase Crow-AMSAA results and suggested phase boundaries are guides to be judged against your engineering knowledge of the system, not automatic conclusions.
+
+**Plant-level annual maintenance cost forecast:** this module produces a planning estimate with only an approximate uncertainty band, not a statistically exact confidence interval. With only a handful of years of annual CMMS history behind it, treat its output as an order-of-magnitude planning number, not a budget commitment — see the "Annual Plant Read Me" sheet in the workbook for the assumptions and limitations behind it.
 
 Use of this workbook is entirely at your own risk. The author accepts no liability for any loss, damage, or decision made based on its output.
 
