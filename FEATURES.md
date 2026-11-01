@@ -1,6 +1,6 @@
 # Feature Summary
 
-Applies to v4.0. See [CHANGELOG.md](https://weibull-nerd-eng.github.io/reliability-toolkit/CHANGELOG.html) for what changed in each version, and the [README](https://github.com/Weibull-Nerd-eng/reliability-toolkit/blob/main/README.md) for an overview and download link.
+Applies to v4.0. See [CHANGELOG.md](https://weibull-nerd-eng.github.io/reliability-toolkit/CHANGELOG.html) for what changed in each version, and the [README](https://weibull-nerd-eng.github.io/reliability-toolkit/) for an overview and download link.
 
 ## What's new in v4.0
 
