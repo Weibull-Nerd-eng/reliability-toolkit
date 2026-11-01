@@ -4,6 +4,8 @@ A free, macro-enabled Excel workbook for reliability engineering analysis — We
 
 **Current version: 4.0** (file `Bi_Tri_Weibull_Crow-AMSAA_Reliability_Analysis_Toolkit_v4.0.xlsb`).
 
+For a full feature breakdown see [FEATURES.md](https://weibull-nerd-eng.github.io/reliability-toolkit/FEATURES.html).
+
 ## What's new in 4.0
 
 - Much faster on large data sets. Measured on 20,000 grouped or inspection intervals: a 2-parameter Weibull run with all its bounds and charts now takes well under 2 minutes (previously about 2½ to 5 minutes); Crow-AMSAA runs take about 15 seconds (previously up to a minute, or stalling); Clear Data takes seconds instead of minutes. A 50,000-record date / cycles analysis that previously failed now completes in about 1½ minutes.
@@ -98,19 +100,18 @@ A note on names: "Bi-Weibull" in this toolkit means the 2-parameter Weibull and 
 
 ## Getting Started
 
-1. Download the latest release (`Bi_Tri_Weibull_Crow-AMSAA_Reliability_Analysis_Toolkit_v4.0.xlsb`) from the [Releases](https://github.com/Weibull-Nerd-eng/reliability-toolkit/releases) page.
+1. Download the latest release (`Bi_Tri_Weibull_Crow-AMSAA_Reliability_Analysis_Toolkit_v4.0.xlsb`) from the [Releases](https://github.com/Weibull-Nerd-eng/reliability-toolkit/releases/latest) page.
 2. Open the file in Excel. You'll see a security warning ("Protected View" or a macro warning) — **this is expected** for any macro-enabled workbook downloaded from the internet. Click **Enable Editing**, then **Enable Content** (or **Enable Macros**) to use the tool. If Excel shows a red bar saying macros have been blocked, close the file, right-click it in File Explorer, choose **Properties**, tick **Unblock**, click **OK**, and open it again.
 3. Start from the main menu and pick your data type: individual (date/cycles), grouped, grouped interval-inspection, or plant maintenance cost forecast. If it's your first time, load one of the built-in example datasets (including Weibayes and Fleet MCF examples) to see how the tool works before pasting in your own data.
 4. Follow the wizard: paste in your data, select the relevant columns, and mark failures vs. suspensions — at Step 4 you can set them all at once from your work-order type column (or Preventive/Failure/Suspension for the plant cost forecast).
 5. After the wizard, the analysis choice form shows whether your data suits Weibull, Crow-AMSAA or Weibayes, and on the date / cycles paths offers Fleet MCF to compare repairable units. For Weibayes, set units still running to S first, then click Weibayes – zero / few failures.
 6. For the plant cost forecast specifically, see the "Annual Plant Read Me" tab in the workbook for the full workflow, required Settings-form inputs, and its limitations.
-7. See [docs/screenshots/](https://weibull-nerd-eng.github.io/reliability-toolkit/docs/screenshots/) for a walkthrough of the main screens.
 
 > If Excel won't let you enable macros at all, your organization's security policy may be blocking it — check with IT, or run the file on a personal machine.
 
 ## Disclaimer
 
-See [DISCLAIMER.md](https://github.com/Weibull-Nerd-eng/reliability-toolkit/blob/main/DISCLAIMER.md). Short version: this is free, provided as-is, with no warranty — verify results independently before using them for real maintenance or safety decisions. The plant cost forecast includes an approximate uncertainty band, Weibayes results depend on the Beta you assume, and Fleet MCF flags are screening indicators — treat all three as planning-level figures.
+See [DISCLAIMER.md](https://weibull-nerd-eng.github.io/reliability-toolkit/DISCLAIMER.html). Short version: this is free, provided as-is, with no warranty — verify results independently before using them for real maintenance or safety decisions. The plant cost forecast includes an approximate uncertainty band, Weibayes results depend on the Beta you assume, and Fleet MCF flags are screening indicators — treat all three as planning-level figures.
 
 ## Support this project
 
@@ -126,4 +127,4 @@ See [CHANGELOG.md](https://weibull-nerd-eng.github.io/reliability-toolkit/CHANGE
 
 ## License
 
-All rights reserved. This workbook is free to download and use for personal and internal business purposes. Redistribution, resale, or modification without permission is not permitted. See [DISCLAIMER.md](https://github.com/Weibull-Nerd-eng/reliability-toolkit/blob/main/DISCLAIMER.md) for the full usage terms.
+All rights reserved. This workbook is free to download and use for personal and internal business purposes. Redistribution, resale, or modification without permission is not permitted. See [DISCLAIMER.md](https://weibull-nerd-eng.github.io/reliability-toolkit/DISCLAIMER.html) for the full usage terms.
