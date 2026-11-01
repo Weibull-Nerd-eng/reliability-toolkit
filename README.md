@@ -1,6 +1,16 @@
-# Bi/Tri Weibull & Crow-AMSAA Reliability Analysis Toolkit
+# Bi/Tri Weibull & Crow-AMSAA Reliability Analysis Toolkit v4.0
 
 A free, macro-enabled Excel workbook for reliability engineering analysis — Weibull/Exponential/Lognormal life data analysis, Weibayes zero-failure analysis and demonstration planning, Crow-AMSAA (NHPP power-law) reliability growth analysis, Fleet MCF comparison of repairable units, non-parametric survival analysis, and plant-level maintenance cost forecasting — with full confidence-bound calculations, built entirely in native Excel + VBA. No add-ins, no external software required.
+
+**Current version: 4.0** (file `Bi_Tri_Weibull_Crow-AMSAA_Reliability_Analysis_Toolkit_v4.0.xlsb`).
+
+## What's new in 4.0
+
+- Much faster on large data sets. Measured on 20,000 grouped or inspection intervals: a 2-parameter Weibull run with all its bounds and charts now takes well under 2 minutes (previously about 2½ to 5 minutes); Crow-AMSAA runs take about 15 seconds (previously up to a minute, or stalling); Clear Data takes seconds instead of minutes. A 50,000-record date / cycles analysis that previously failed now completes in about 1½ minutes.
+- Larger data capacity: each input sheet now takes up to about 50,000 records (data rows 8 to 50,100), up from about 15,000. You get a warning if your data runs past that row, rather than rows being silently ignored.
+- Accuracy and robustness fixes: the Crow-AMSAA bias-correction factor no longer overflows above about 340 failures; counts formatted as dates on the grouped and inspection input sheets are no longer read as zero; Summary page ranges no longer shrink after repeated runs; error messages now show the real error.
+- Results match 3.1 for all practical purposes. The grouped and inspection Lognormal and Exponential curves may differ in the 7th significant figure because of the faster calculation method.
+- A smaller, cleaner file: the curve lookup tables are rebuilt only when needed and the VBA project has been rebuilt without old compiled code.
 
 ## What it does
 
@@ -45,7 +55,7 @@ A free, macro-enabled Excel workbook for reliability engineering analysis — We
 - Compares units of the same kind — a fleet of pumps, conveyors or haul trucks — to answer: is the fleet's repair rate rising, and which units drive it?
 - Nelson mean cumulative function (MCF) with robust Lawless-Nadeau confidence bounds, plus a power-law fleet trend (Beta) with a rising / falling / no-clear-trend verdict
 - Ranks every unit by its repairs against what the fleet average predicts for its observation time, and flags units that are clearly high or low (Poisson test)
-- Works with any CMMS layout: map your own unit column (functional location, asset tag ...), event date or meter reading, and work-order type once — the choices are remembered by header name
+- Works with any CMMS layout: map your own unit column (functional location, asset tag …), event date or meter reading, and work-order type once — the choices are remembered by header name
 - Repairs are counted; preventive work is not counted and the unit stays in service. Choose where each unit's observation starts and ends
 - MCF chart with the top-ranked units overlaid, an event plot of every unit, a one-page PDF report, and a built-in six-pump example
 
@@ -56,8 +66,9 @@ A separate, plant-wide module that turns multi-year CMMS cost history into a for
 ### Guided data entry
 
 - Wizard for choosing your data type (individual date/cycles, grouped, grouped interval-inspection, or plant cost forecast) and pasting in CMMS/maintenance data, selecting columns, and marking failures vs. suspensions
+- Up to about 50,000 records per input sheet (data rows 8 to 50,100), with a warning if your data runs past that row
 - Step 2 analysis level: record whether you are analysing a component on one machine, a component across like machines, an equipment type or a whole plant. The name and location boxes take whatever describes your analysis; the level appears in report headers and guides the choice of method
-- Step 4 "Set F / S from a column": pick the column in your CMMS export that says what kind of job each row was (order type, PM / CM, activity ...), tick the values that are repairs, and every row is marked F or S in one click — with a warning if your data has no such column
+- Step 4 "Set F / S from a column": pick the column in your CMMS export that says what kind of job each row was (order type, PM / CM, activity …), tick the values that are repairs, and every row is marked F or S in one click — with a warning if your data has no such column
 - Built-in example datasets for every data-entry path, including Weibayes and Fleet MCF examples; the date / cycles examples carry a work-order type column, as a real CMMS export would
 - Calendar date-picker, and validation to catch missing or malformed data before it causes problems downstream
 - The analysis choice form shows the current failure and suspension counts with a verdict for each method (Weibull, Crow-AMSAA, Weibayes), warns if failures and suspensions were changed after Step 4 or if all failures fall at one age, and offers Fleet MCF on the date / cycles paths
@@ -74,25 +85,28 @@ A separate, plant-wide module that turns multi-year CMMS cost history into a for
 
 This toolkit covers the core single-population life-data and reliability-growth workflow that most engineers reach a paid reliability package for: 2P/3P Weibull, exponential, and lognormal fitting by rank regression or MLE, Fisher Matrix / Likelihood Ratio / Bayesian / bootstrap confidence bounds, Weibayes zero-failure analysis with demonstration planning, non-parametric Kaplan-Meier and actuarial survival overlays, NHPP power-law (Crow-AMSAA) growth analysis with the standard bias-corrected estimators, multi-phase fits and trend testing, and Fleet MCF comparison of repairable units — all built natively in Excel/VBA, with no license fee. For a single asset, a single failure mode, a single fleet-level growth trend, or a fleet of like repairable units, the numbers should line up with what a commercial statistics or reliability package would return.
 
-It stops short of full commercial reliability suites in a few areas: accelerated life testing (stress-life models, Arrhenius/Eyring-type extrapolation), degradation analysis, multi-stress design of experiments, warranty-data streaming from a live database, system-level modeling (reliability block diagrams, fault trees), and reliability-growth-with-corrective-actions tracking. Those are the features that typically justify an enterprise reliability platform's cost, and this workbook isn't a substitute for them.
+It stops short of full commercial reliability suites in a few areas: accelerated life testing (stress-life models, Arrhenius/Eyring-type extrapolation), degradation analysis, multi-stress design of experiments, warranty-data streaming from a live database, system-level modeling (reliability block diagrams, fault trees), mixed or competing failure modes, and reliability-growth-with-corrective-actions tracking. Those are the features that typically justify an enterprise reliability platform's cost, and this workbook isn't a substitute for them.
+
+A note on names: "Bi-Weibull" in this toolkit means the 2-parameter Weibull and "Tri-Weibull" the 3-parameter Weibull. Some commercial packages use "Bi-Weibull" for a two-subpopulation mixed model, which this toolkit does not fit.
 
 ## Requirements
 
-- Microsoft Excel, 64-bit recommended for larger datasets (32-bit Excel's ~2GB memory limit can be a problem on bigger analyses)
+- Microsoft Excel, 64-bit recommended, especially for data sets of more than about 10,000 records (32-bit Excel's ~2GB memory limit can be a problem on bigger analyses)
 - Macros must be enabled — see [Getting Started](#getting-started) below
-- Windows is recommended; some features (e.g. Goal Seek-based calculations) are more reliable on Windows Excel than Excel for Mac
+- Windows is recommended; the toolkit is developed and tested on Windows Excel, and Excel for Mac is not tested
+- Large data sets take time: allow a minute or two per analysis at around 20,000 intervals or 50,000 records
 
 ## Getting Started
 
-1. Download the latest release from the [Releases page](https://weibull-nerd-eng.github.io/reliability-toolkit/).
-2. Open the file in Excel. You'll see a security warning ("Protected View" or a macro warning) — this is expected for any macro-enabled workbook downloaded from the internet. Click Enable Editing, then Enable Content (or Enable Macros) to use the tool.
+1. Download the latest release (`Bi_Tri_Weibull_Crow-AMSAA_Reliability_Analysis_Toolkit_v4.0.xlsb`) from the [Releases](https://github.com/Weibull-Nerd-eng/reliability-toolkit/releases) page.
+2. Open the file in Excel. You'll see a security warning ("Protected View" or a macro warning) — **this is expected** for any macro-enabled workbook downloaded from the internet. Click **Enable Editing**, then **Enable Content** (or **Enable Macros**) to use the tool. If Excel shows a red bar saying macros have been blocked, close the file, right-click it in File Explorer, choose **Properties**, tick **Unblock**, click **OK**, and open it again.
 3. Start from the main menu and pick your data type: individual (date/cycles), grouped, grouped interval-inspection, or plant maintenance cost forecast. If it's your first time, load one of the built-in example datasets (including Weibayes and Fleet MCF examples) to see how the tool works before pasting in your own data.
 4. Follow the wizard: paste in your data, select the relevant columns, and mark failures vs. suspensions — at Step 4 you can set them all at once from your work-order type column (or Preventive/Failure/Suspension for the plant cost forecast).
 5. After the wizard, the analysis choice form shows whether your data suits Weibull, Crow-AMSAA or Weibayes, and on the date / cycles paths offers Fleet MCF to compare repairable units. For Weibayes, set units still running to S first, then click Weibayes – zero / few failures.
 6. For the plant cost forecast specifically, see the "Annual Plant Read Me" tab in the workbook for the full workflow, required Settings-form inputs, and its limitations.
-7. See [docs/screenshots/](docs/screenshots/) for a walkthrough of the main screens.
+7. See [docs/screenshots/](https://weibull-nerd-eng.github.io/reliability-toolkit/docs/screenshots/) for a walkthrough of the main screens.
 
-If Excel won't let you enable macros at all, your organization's security policy may be blocking it — check with IT, or run the file on a personal machine.
+> If Excel won't let you enable macros at all, your organization's security policy may be blocking it — check with IT, or run the file on a personal machine.
 
 ## Disclaimer
 
@@ -108,7 +122,7 @@ Found a bug or have a suggestion? Please [open an Issue](https://github.com/Weib
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for the list of changes in each version.
+See [CHANGELOG.md](https://weibull-nerd-eng.github.io/reliability-toolkit/CHANGELOG.html) for the list of changes in each version.
 
 ## License
 
