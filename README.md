@@ -1,6 +1,6 @@
 # Bi/Tri Weibull & Crow-AMSAA Reliability Analysis Toolkit v4.0
 
-A free, macro-enabled Excel workbook for reliability engineering analysis — Weibull/Exponential/Lognormal life data analysis, Weibayes zero-failure analysis and demonstration planning, Crow-AMSAA (NHPP power-law) reliability growth analysis, Fleet MCF comparison of repairable units, non-parametric survival analysis, and plant-level maintenance cost forecasting — with full confidence-bound calculations, built entirely in native Excel + VBA. No add-ins, no external software required.
+A free, macro-enabled Excel workbook for reliability engineering analysis — Weibull/Exponential/Lognormal life data analysis, Weibayes zero-failure analysis and demonstration planning, Crow-AMSAA (NHPP power-law) reliability growth analysis, Fleet MCF comparison of repairable units, data set comparison and batch runs by equipment class, non-parametric survival analysis, and plant-level maintenance cost forecasting — with full confidence-bound calculations, built entirely in native Excel + VBA. No add-ins, no external software required.
 
 **Current version: 4.0** (file `Bi_Tri_Weibull_Crow-AMSAA_Reliability_Analysis_Toolkit_v4.0.xlsb`).
 
@@ -8,9 +8,13 @@ For a full feature breakdown see [FEATURES.md](https://weibull-nerd-eng.github.i
 
 ## What's new in 4.0
 
-- Much faster on large data sets. Measured on 20,000 grouped or inspection intervals: a 2-parameter Weibull run with all its bounds and charts now takes well under 2 minutes (previously about 2½ to 5 minutes); Crow-AMSAA runs take about 15 seconds (previously up to a minute, or stalling); Clear Data takes seconds instead of minutes. A 50,000-record date / cycles analysis that previously failed now completes in about 1½ minutes.
+- Data Set Comparison (date / cycles): split your data by a column (supplier, site, equipment type …) or into before / after a date, fit both groups and the two together, and use likelihood-ratio tests to see whether the groups differ at all and whether they share the same Beta. Weibull-paper chart and one-page PDF.
+- Batch run by class (date / cycles): fit a Weibull to every class in a column in one run — MLE with Likelihood Ratio bounds, B10 and the failure pattern (early-life, random or wear-out) — sorted by B10, with a landscape PDF.
+- True 3-parameter Weibull MLE (Beta, Eta and location found together) on the date / cycles Tri-Weibull summary page, beside the Tri-Weibull fit as a cross-check.
+- Step 4 keeps your corrections: rows you change by hand are no longer overwritten when you click Apply to all rows again. You're asked once whether to keep them, and kept rows are shaded.
+- Much faster on large data sets. Measured on 20,000 grouped or inspection intervals: a 2-parameter Weibull run with all its bounds and charts now takes about 1 to 1½ minutes (previously about 2½ to 5 minutes); Crow-AMSAA runs take about 15 seconds (previously up to a minute, or stalling); Clear Data takes seconds instead of minutes. A 50,000-record date / cycles 2-parameter analysis that previously failed now completes in under a minute.
 - Larger data capacity: each input sheet now takes up to about 50,000 records (data rows 8 to 50,100), up from about 15,000. You get a warning if your data runs past that row, rather than rows being silently ignored.
-- Accuracy and robustness fixes: the Crow-AMSAA bias-correction factor no longer overflows above about 340 failures; counts formatted as dates on the grouped and inspection input sheets are no longer read as zero; Summary page ranges no longer shrink after repeated runs; error messages now show the real error.
+- Accuracy and robustness fixes: the Crow-AMSAA bias-correction factor no longer overflows above about 340 failures; counts formatted as dates on the grouped and inspection input sheets are no longer read as zero; Summary page ranges no longer shrink after repeated runs; error messages now show the real error; the grouped and inspection Crow-AMSAA charts no longer raise Excel's log-chart warning; the Close button is no longer cut off on the analysis choice form for grouped and inspection data.
 - Results match 3.1 for all practical purposes. The grouped and inspection Lognormal and Exponential curves may differ in the 7th significant figure because of the faster calculation method.
 - A smaller, cleaner file: the curve lookup tables are rebuilt only when needed and the VBA project has been rebuilt without old compiled code.
 
@@ -20,10 +24,20 @@ For a full feature breakdown see [FEATURES.md](https://weibull-nerd-eng.github.i
 
 - 2-parameter and 3-parameter ("Tri") Weibull fitting, plus Exponential and Lognormal fits for side-by-side distribution comparison — all available across every data-entry path (individual records, grouped data, and grouped interval-inspection data)
 - Rank regression and Maximum Likelihood Estimation (MLE), with a reduced-bias (RBA) MLE Beta for small samples
+- True 3-parameter maximum-likelihood fit (Beta, Eta and location found together) on the date / cycles Tri-Weibull summary page, shown beside the Tri-Weibull fit as a cross-check
 - Supports suspended/censored data, grouped data, and grouped interval-inspection data
 - Confidence bounds: Fisher Matrix, Likelihood Ratio, Bayesian credible bounds (with your own prior), and parametric bootstrap bounds
 - Goodness-of-fit reporting (Anderson-Darling AD*, Stephens-adjusted, for individual data; G² deviance and AIC for grouped and inspection data) and a Distribution Fit Comparison table to help you pick the best-fitting model
 - Spares forecasting and cost analysis built on the fitted distribution
+
+### Data Set Comparison and Batch runs (date / cycles data)
+
+- Data Set Comparison: split your data by a column (supplier, site, equipment type …) or into before / after a date, and fit Group A, Group B and both together
+- Likelihood-ratio tests answer two questions: do the two groups differ at all, and do they share the same Beta (the same failure pattern, at a different life)?
+- Weibull-paper chart of both groups, and a one-page PDF report
+- Batch run by class: fit a Weibull to every class in a column (a header containing "class" is picked by default) in one run — MLE with Likelihood Ratio bounds, B10, and the failure pattern (early-life, random or wear-out) read from where Beta's bounds lie
+- Classes are sorted by B10, so the shortest-lived equipment classes are at the top; landscape PDF report
+- Both are offered on the analysis choice form for date / cycles data, and both are included in the path report when their results are current
 
 ### Weibayes / zero-failure analysis
 
@@ -71,9 +85,10 @@ A separate, plant-wide module that turns multi-year CMMS cost history into a for
 - Up to about 50,000 records per input sheet (data rows 8 to 50,100), with a warning if your data runs past that row
 - Step 2 analysis level: record whether you are analysing a component on one machine, a component across like machines, an equipment type or a whole plant. The name and location boxes take whatever describes your analysis; the level appears in report headers and guides the choice of method
 - Step 4 "Set F / S from a column": pick the column in your CMMS export that says what kind of job each row was (order type, PM / CM, activity …), tick the values that are repairs, and every row is marked F or S in one click — with a warning if your data has no such column
+- Rows you correct by hand at Step 4 are kept: if you click Apply to all rows again, you are asked once whether to keep them, and kept rows are shaded so you can see which work orders you reclassified
 - Built-in example datasets for every data-entry path, including Weibayes and Fleet MCF examples; the date / cycles examples carry a work-order type column, as a real CMMS export would
 - Calendar date-picker, and validation to catch missing or malformed data before it causes problems downstream
-- The analysis choice form shows the current failure and suspension counts with a verdict for each method (Weibull, Crow-AMSAA, Weibayes), warns if failures and suspensions were changed after Step 4 or if all failures fall at one age, and offers Fleet MCF on the date / cycles paths
+- The analysis choice form shows the current failure and suspension counts with a verdict for each method (Weibull, Crow-AMSAA, Weibayes), warns if failures and suspensions were changed after Step 4 or if all failures fall at one age, and on the date / cycles paths offers Fleet MCF, Data Set Comparison and Batch run by class
 - Main Menu closes any windows still open, so a new analysis always starts clean
 
 ### Reporting
@@ -81,7 +96,7 @@ A separate, plant-wide module that turns multi-year CMMS cost history into a for
 - One-click PDF export of the Summary pages (distribution comparison table, charts)
 - Advanced report builder for a full, multi-sheet PDF of an analysis path
 - Every page of a path report prints as large as fits on one page, in whichever orientation suits it
-- One-page PDF reports for Weibayes and Fleet MCF, named by data path; report headers show the analysis level
+- One-page PDF reports for Weibayes, Fleet MCF and Data Set Comparison, and a landscape report for Batch run by class, named by data path; report headers show the analysis level
 
 ## How this fits alongside commercial reliability software
 
@@ -103,8 +118,8 @@ A note on names: "Bi-Weibull" in this toolkit means the 2-parameter Weibull and 
 1. Download the latest release (`Bi_Tri_Weibull_Crow-AMSAA_Reliability_Analysis_Toolkit_v4.0.xlsb`) from the [Releases](https://github.com/Weibull-Nerd-eng/reliability-toolkit/releases/latest) page.
 2. Open the file in Excel. You'll see a security warning ("Protected View" or a macro warning) — **this is expected** for any macro-enabled workbook downloaded from the internet. Click **Enable Editing**, then **Enable Content** (or **Enable Macros**) to use the tool. If Excel shows a red bar saying macros have been blocked, close the file, right-click it in File Explorer, choose **Properties**, tick **Unblock**, click **OK**, and open it again.
 3. Start from the main menu and pick your data type: individual (date/cycles), grouped, grouped interval-inspection, or plant maintenance cost forecast. If it's your first time, load one of the built-in example datasets (including Weibayes and Fleet MCF examples) to see how the tool works before pasting in your own data.
-4. Follow the wizard: paste in your data, select the relevant columns, and mark failures vs. suspensions — at Step 4 you can set them all at once from your work-order type column (or Preventive/Failure/Suspension for the plant cost forecast).
-5. After the wizard, the analysis choice form shows whether your data suits Weibull, Crow-AMSAA or Weibayes, and on the date / cycles paths offers Fleet MCF to compare repairable units. For Weibayes, set units still running to S first, then click Weibayes – zero / few failures.
+4. Follow the wizard: paste in your data, select the relevant columns, and mark failures vs. suspensions — at Step 4 you can set them all at once from your work-order type column, then correct single rows by hand (or Preventive/Failure/Suspension for the plant cost forecast).
+5. After the wizard, the analysis choice form shows whether your data suits Weibull, Crow-AMSAA or Weibayes, and on the date / cycles paths offers Fleet MCF to compare repairable units, Data Set Comparison and Batch run by class. For Weibayes, set units still running to S first, then click Weibayes – zero / few failures.
 6. For the plant cost forecast specifically, see the "Annual Plant Read Me" tab in the workbook for the full workflow, required Settings-form inputs, and its limitations.
 
 > If Excel won't let you enable macros at all, your organization's security policy may be blocking it — check with IT, or run the file on a personal machine.
