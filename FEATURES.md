@@ -4,10 +4,14 @@ Applies to v4.0. See [CHANGELOG.md](https://weibull-nerd-eng.github.io/reliabili
 
 ## What's new in v4.0
 
-v4.0 adds no new analyses; the same methods now run on much larger CMMS exports, much faster.
+v4.0 runs the existing methods on much larger CMMS exports, much faster, and adds three analyses on the date / cycles path.
 
+- **Data Set Comparison:** split the data by a column or into before / after a date and test whether the two groups differ, and whether they share the same Beta. See Data Set Comparison and Batch Runs below.
+- **Batch run by class:** a Weibull fit for every equipment class in one run, with bounds, B10 and failure pattern, sorted by B10.
+- **True 3-parameter Weibull MLE** on the Tri-Weibull summary page, as a cross-check on the Tri-Weibull fit.
+- **Step 4 keeps your corrections:** F / S values changed by hand are kept (and shaded) when you apply the work-order type rule again.
 - **Larger data capacity:** each input sheet takes up to about 50,000 records (data rows 8 to 50,100), up from about 15,000.
-- **Much faster on large data sets:** on 20,000 grouped or inspection intervals, a 2-parameter Weibull run with all its bounds and charts takes well under 2 minutes (previously about 2½ to 5 minutes), and Crow-AMSAA runs take about 15 seconds (previously up to a minute, or stalling). A 50,000-record date / cycles analysis that previously failed completes in about 1½ minutes. See [Performance and capacity](#performance-and-capacity).
+- **Much faster on large data sets:** on 20,000 grouped or inspection intervals, a 2-parameter Weibull run with all its bounds and charts takes about 1 to 1½ minutes (previously about 2½ to 5 minutes), and Crow-AMSAA runs take about 15 seconds (previously up to a minute, or stalling). A 50,000-record date / cycles 2-parameter analysis that previously failed completes in under a minute. See [Performance and capacity](#performance-and-capacity).
 - **Accuracy and robustness fixes:** the Crow-AMSAA bias-correction factor no longer overflows above about 340 failures; counts formatted as dates on the grouped and inspection input sheets are no longer read as zero; Summary page ranges no longer shrink after repeated runs.
 - **Results match v3.1** for all practical purposes; grouped and inspection Lognormal and Exponential curves can differ in the 7th significant figure because of the faster calculation method.
 
@@ -20,6 +24,7 @@ Every path below supports a standard 2-parameter Weibull fit, a 3-parameter ("Tr
 Paste in individual failure/suspension records directly, by calendar date or by cycles/operating hours. Supports:
 
 - Rank regression and Maximum Likelihood Estimation (MLE) fitting, with a reduced-bias (RBA) MLE Beta for small samples
+- True 3-parameter Weibull MLE: Beta, Eta and location found together by maximum likelihood and shown on the Tri-Weibull summary page beside the Tri-Weibull fit, as a cross-check on the location. The search takes the highest local maximum and ignores the unbounded rise of the likelihood as the location approaches the first failure; it runs at all data sizes (about 20 seconds at 50,000 records)
 - Fisher Matrix, Likelihood Ratio, and Bayesian credible confidence bounds (90% two-sided), plus parametric bootstrap intervals
 - 90% beta-binomial confidence band drawn on the Weibull regression chart
 - Bayesian MAP (maximum a posteriori) Beta estimation with a user-supplied prior (expected Beta and prior sample size), for incorporating engineering judgment or fleet history alongside the data
@@ -36,6 +41,30 @@ Same fitting methods, confidence bound options, and distribution comparison as B
 For data from periodic inspections where failures are only known to have occurred sometime between two inspection dates, rather than at a precise time. Same fitting, bounding, G² / AIC fit checks and Actuarial survival overlay as Grouped, built for this larger, interval-censored data structure. Interval order and count checks run before the analysis starts.
 
 **Across all three paths:** guided data-entry wizard, rank-order/probability plotting worksheets, and bootstrap results sheets.
+
+## Data Set Comparison and Batch Runs — Date / Cycles
+
+Two analyses for individual date / cycles records that answer questions a single pooled fit can't. Both are on the analysis choice form, use maximum-likelihood fits with suspensions, and are included in the path report when their results are current.
+
+### Data Set Comparison
+
+Are two groups of the same equipment really different — two suppliers, two sites, or the same fleet before and after a design change?
+
+- Split by any column (pick the two values to compare) or into before / after a date
+- MLE fits for Group A, Group B and both together: records, failures and suspensions, Beta and Eta with 90% bounds, and B10 life for each
+- Likelihood-ratio tests: do the groups differ at all (2 degrees of freedom), and do they share the same Beta (1 degree of freedom) — the same failure pattern, at a different life
+- Both groups on one Weibull-paper chart
+- One-page PDF report; results clear automatically when the data changes
+
+### Batch run by class
+
+A Weibull fit for every class in a column in one run — typically equipment class, so a whole CMMS export is screened at once.
+
+- Group by any column; a header containing "class" is picked by default
+- For each class: records, failures, suspensions, MLE Beta and Eta with 90% Likelihood Ratio bounds, and B10 life; classes with fewer than 2 failures are listed but not fitted
+- Failure pattern read from Beta's bounds: early-life (bounds below 1), random (bounds span 1) or wear-out (bounds above 1)
+- Classes sorted by B10, shortest-lived first
+- Landscape PDF report
 
 ## Weibayes — Zero-Failure / Few-Failure Analysis
 
@@ -142,7 +171,7 @@ A separate, plant-wide module (distinct from the per-asset Cost Analysis sheets 
 - One-click PDF export of the Summary pages (distribution comparison table, charts)
 - Path report builder for a full, multi-sheet PDF of everything run on an analysis path
 - Path reports print every page as large as fits on one page, in whichever orientation suits it; input shading is left off the PDF and chart labels are kept clear of axes and curves
-- One-page Weibayes and Fleet MCF reports, named by data path
+- One-page Weibayes, Fleet MCF and Data Set Comparison reports, and a landscape Batch run by class report, named by data path; Data Set Comparison and Batch results are included in the date / cycles path report when current
 - Report headers show what was analysed and the analysis level
 
 ## Performance and capacity
@@ -151,22 +180,23 @@ Measured on stress data sets (20,000 grouped or inspection intervals; 49,990 dat
 
 | Run | v3.1 | v4.0 |
 | --- | --- | --- |
-| Date / cycles, 2-parameter Weibull | Failed after 52+ min | About 1½ min |
-| Date / cycles, 3-parameter Weibull | Not reached | About 2 min |
-| Grouped, 2- / 3-parameter Weibull | About 5 min | Under 2 min |
-| Grouped, Crow-AMSAA failures only / all data | Stalled / 1 min 45 s | About 15 s / 12 s |
-| Inspection, 2-parameter Weibull | About 2½ min | 45 s – 1½ min |
-| Inspection, Crow-AMSAA (each) | About 1 min | About 15 s |
-| Clear Data (any path) | Up to 4½ min | Seconds |
+| Date / cycles, 2-parameter Weibull | Failed after 52+ min | About 45 s |
+| Date / cycles, 3-parameter Weibull (with the 3-parameter MLE) | Not reached | About 1¼ min |
+| Date / cycles, Crow-AMSAA failures only / all data | Not measured | About 27 s / 36 s |
+| Grouped, 2- / 3-parameter Weibull | About 5 min | About 1¼ min / 1 min |
+| Grouped, Crow-AMSAA failures only / all data | Stalled / 1 min 45 s | About 14 s / 13 s |
+| Inspection, 2- / 3-parameter Weibull | About 2½ min / 1¾ min | About 1½ min / 1 min |
+| Inspection, Crow-AMSAA (each) | About 1 min | About 14 s |
+| Clear Data (any path) | Up to 4½ min | About 7 – 17 s |
 
-How: chart drawing, goal seeks and the inspection fits no longer recalculate the whole workbook after every cell they write; rank and goodness-of-fit columns are built in memory; the grouped, inspection and Crow-AMSAA likelihoods evaluate each interval end once; root and maximum searches use Newton, Brent and Illinois steps with result caching. The faster Crow-AMSAA likelihood checks itself against the original calculation on your data at every run, and falls back to the original if they ever disagree.
+How: chart drawing, goal seeks and the inspection fits no longer recalculate the whole workbook after every cell they write; rank and goodness-of-fit columns are built in memory; the grouped, inspection and Crow-AMSAA likelihoods evaluate each interval end once; root and maximum searches use Newton, Brent and Illinois steps with result caching; the workbook recalculates once before the screen is turned back on. The faster Crow-AMSAA likelihood checks itself against the original calculation on your data at every run, and falls back to the original if they ever disagree.
 
 ## Supporting features
 
 - Guided data-entry wizard — choose your data type (individual, grouped, grouped interval-inspection, or plant cost forecast), paste in raw maintenance data, select the relevant columns, and mark failures vs. suspensions, with validation for missing data
-- Set F / S from a column (Step 4) — pick the CMMS column that says what kind of job each row was (order type, PM / CM, activity …), tick the values that are repairs, and every row is marked Failure or Suspension in one click; single rows can still be changed, and a warning appears if the data has no such column
+- Set F / S from a column (Step 4) — pick the CMMS column that says what kind of job each row was (order type, PM / CM, activity …), tick the values that are repairs, and every row is marked Failure or Suspension in one click; single rows can still be changed by hand, and are kept (and shaded) if you apply the rule again — you're asked once. A warning appears if the data has no such column
 - Analysis level (Step 2) — the name and location boxes take whatever describes your analysis, and a drop-down records its level: component on one machine, component across like machines, equipment type, or plant-wide. Shown in report headers, with a gentle check before a single-population Weibull or Weibayes analysis of plant-wide data
-- Method checks on the analysis choice form — live failure/suspension counts with a verdict for Weibull, Crow-AMSAA and Weibayes; warnings if the F/S flags changed after Step 4 or all failures fall at one age; Fleet MCF offered on the date/cycles paths
+- Method checks on the analysis choice form — live failure/suspension counts with a verdict for Weibull, Crow-AMSAA and Weibayes; warnings if the F/S flags changed after Step 4 or all failures fall at one age; Fleet MCF, Data Set Comparison and Batch run by class offered on the date/cycles paths
 - Input checks before a run: interval order and overlap checks, numeric and whole-number count checks, and a warning if the working copy of the data no longer matches the CMMS sheet
 - Data limit of row 50,100 on input sheets (about 50,000 records), with a warning instead of silently ignoring rows below it
 - Prompts before re-running an analysis or replacing a dataset that already has results, with a shortcut to the existing results
